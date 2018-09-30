@@ -1,6 +1,6 @@
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 // A simple Arduino Teensy 3.1/3.2/3.5/3.6 CAN driver
-// by Pierre Molinaro & Jean-Luc Béchennec
+// by Pierre Molinaro
 // https://github.com/pierremolinaro/acan
 //
 // This driver is written from FlexCan Library by teachop
@@ -28,7 +28,7 @@
 //
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-#include "ACAN.h"
+#include <ACAN.h>
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 //    FlexCAN Register access

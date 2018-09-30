@@ -4,7 +4,7 @@
 % Le script utilisé pour compiler est :
 %       xelatex --file-line-error --shell-escape --synctex=1
 
-\documentclass[9pt, a4paper, obeyspaces, openany]{extarticle}
+\documentclass[10pt, a4paper, obeyspaces, openany]{extarticle}
 % L'option 'openany' permet de démarrer un chapitre sur une page paire
 
 % L'option 'obeyspaces' indique au paquetage hyperref de respecter les espaces dans les chemins \path ou \url.
@@ -25,7 +25,7 @@
 % http://www.tuteurs.ens.fr/logiciels/latex/xetex.html
 \RequirePackage{etex}
 \usepackage{fontspec}
-\setmainfont{Titillium}[Ligatures=TeX]
+\setmainfont{Georgia}[Ligatures=TeX]
 \setsansfont{Courier}[Ligatures=NoCommon,Scale=0.95]
 \setmonofont{Courier}[Ligatures=NoCommon,Scale=0.95]
 %\usepackage{polyglossia}
@@ -307,9 +307,9 @@
 %                                                                                                                       *
 %-----------------------------------------------------------------------------------------------------------------------*
 
-\title{\bf \Huge{ACAN library for Teensy 3.1 / 3.2, 3.5, 3.6\\Version 1.0.1}}
+\title{\bf \Huge{ACAN library for Teensy 3.1 / 3.2, 3.5, 3.6\\Version 1.0.3}}
 \author{Pierre Molinaro}
-\date {December 11, 2017}
+\date {\today}
 
 \maketitle
 
@@ -334,6 +334,7 @@
     \textbf{Version} & \textbf{Date} & \textbf{Comment}\\
     1.0.0 & October 9, 2017 & Initial release \\
     1.0.1 & December 11, 2017 & Added \texttt{mTxPinIsOpenCollector} (see \refSubsubsectionPage{TxPinIsOpenCollector}) and \texttt{mRxPinHasInternalPullUp} settings (\refSubsubsectionPage{RxPinHasInternalPullUp}) \\
+    1.0.3 & ?? & Adding include guard in \texttt{CANmessage.h} header file
   \end{tabular}
 \end{center}
 
@@ -543,6 +544,8 @@ void loop () {
 
 \sectionLabel{The \texttt{CANMessage} class}{CANMessageClass}
 
+{\bf Note. } The \texttt{CANMessage} class is declared in the \texttt{CANMessage.h} header file. The class declaration is protected by an include guard that causes the macro \texttt{GENERIC\_CAN\_MESSAGE\_DEFINED} to be defined. The ACAN2515 driver contains an identical \texttt{CANMessage.h} file header, enabling using both ACAN driver and ACAN2515 driver in a sketch.
+
 A \emph{CAN message} is an object that contains all CAN frame user informations. All properties are initialized by default, and represent a standard data frame, with an identifier equal to $0$, and without any data.
 
 { \small\begin{lstlisting}[language=c++]
@@ -563,7 +566,7 @@ class CANMessage {
 } ;
 \end{lstlisting}}
 
-Note the message datas are defined by an {\bf\texttt{union}}. So message datas can be seen as height bytes, four 16-bits unsigned integers, two 32-bits, or one 64-bits. Be aware that multi-byte integers are subject to endianness (Cortex M4 processors of Teensy 3.x are little-endian).
+Note the message datas are defined by an {\bf\texttt{union}}. So message datas can be seen as height bytes, four 16-bit unsigned integers, two 32-bit, or one 64-bit. Be aware that multi-byte integers are subject to endianness (Cortex M4 processors of Teensy 3.x are little-endian).
 
 The \texttt{idx} property is not used in CAN frames, but:
 \begin{itemize}

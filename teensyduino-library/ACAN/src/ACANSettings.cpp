@@ -1,6 +1,6 @@
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 // A simple Arduino Teensy 3.1/3.2/3.5/3.6 CAN driver
-// by Pierre Molinaro & Jean-Luc Béchennec
+// by Pierre Molinaro
 // https://github.com/pierremolinaro/acan
 //
 // This driver is written from FlexCan Library by teachop
@@ -10,7 +10,7 @@
 //
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-#include "ACANSettings.h"
+#include <ACANSettings.h>
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 //    CAN Settings
@@ -120,7 +120,7 @@ uint32_t ACANSettings::CANBitSettingConsistency (void) const {
     errorCode |= kBitRatePrescalerIsGreaterThan256 ;
   }
   if (mPropagationSegment == 0) {
-    errorCode |= kBitRatePrescalerIsGreaterThan256 ;
+    errorCode |= kPropagationSegmentIsZero ;
   }else if (mPropagationSegment > 8) {
     errorCode |= kPropagationSegmentIsGreaterThan8 ;
   }
