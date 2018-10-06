@@ -1,6 +1,6 @@
+//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 //
 //  main.cpp
-//  molican-settings
 //
 //  Created by Pierre Molinaro on 30/09/2017.
 //  Copyright © 2017 Pierre Molinaro. All rights reserved.
@@ -17,28 +17,31 @@ using namespace std ;
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-static void compute (const uint32_t inWhishedBaudRate) {
-  ACANSettings settings (inWhishedBaudRate) ;
-  cout << "Wished baud rate: " << settings.mWhishedBitRate << " bit/s"  << endl ;
-  cout << "  Divisor : " << (unsigned) settings.mBitRatePrescaler << endl ;
-  cout << "  Prop seg: " << (unsigned) settings.mPropagationSegment << endl ;
-  cout << "  Segment1: " << (unsigned) settings.mPhaseSegment1 << endl ;
-  cout << "  Segment2: " << (unsigned) settings.mPhaseSegment2 << endl ;
-  cout << "  RJW     : " << (unsigned) settings.mRJW << endl ;
-  cout << "  Sampling: " << (settings.mTripleSampling ? "triple" : "single") << endl ;
-  cout << "  Actual baud rate: " << settings.actualBitRate () << " bit/s" << endl ;
-  cout << "  ppm: " << settings.ppmFromWishedBitRate () << endl ;
-  cout << "  Sample Point: " << settings.samplePointFromBitStart () << "%" << endl ;
-  cout << "  Bit setting closed to wished bit rate ok: " << ((settings.ppmFromWishedBitRate () < 1000) ? "yes" : "no") << endl ;
-}
+static const uint32_t firstTestedBitRate = 1 ; // 1 bit/s
+static const uint32_t lastTestedBitRate = 20 * 1000 * 1000 ; // 20 Mbit/s
+
+//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+//static void compute (const uint32_t inWhishedBaudRate) {
+//  ACANSettings settings (inWhishedBaudRate) ;
+//  cout << "Desired baud rate: " << settings.mWhishedBitRate << " bit/s"  << endl ;
+//  cout << "  Divisor : " << (unsigned) settings.mBitRatePrescaler << endl ;
+//  cout << "  Prop seg: " << (unsigned) settings.mPropagationSegment << endl ;
+//  cout << "  Segment1: " << (unsigned) settings.mPhaseSegment1 << endl ;
+//  cout << "  Segment2: " << (unsigned) settings.mPhaseSegment2 << endl ;
+//  cout << "  RJW     : " << (unsigned) settings.mRJW << endl ;
+//  cout << "  Sampling: " << (settings.mTripleSampling ? "triple" : "single") << endl ;
+//  cout << "  Actual baud rate: " << settings.actualBitRate () << " bit/s" << endl ;
+//  cout << "  ppm: " << settings.ppmFromWishedBitRate () << endl ;
+//  cout << "  Sample Point: " << settings.samplePointFromBitStart () << "%" << endl ;
+//  cout << "  Bit setting closed to wished bit rate ok: " << ((settings.ppmFromWishedBitRate () < 1000) ? "yes" : "no") << endl ;
+//}
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
 static void exploreAllSettings (void) {
   cout << "Explore all settings" << endl ;
-  const uint32_t start = 1 ; // 1 bit/s
-  const uint32_t end = 20 * 1000 * 1000 ; // 20 Mbit/s
-  for (uint32_t br = start ; br <= end ; br ++) {
+  for (uint32_t br = firstTestedBitRate ; br <= lastTestedBitRate ; br ++) {
     ACANSettings settings (br) ;
     const uint32_t errorCode = settings.CANBitSettingConsistency () ;
     if (errorCode != 0) {
@@ -46,14 +49,14 @@ static void exploreAllSettings (void) {
       exit (1) ;
     }
   }
-  cout << "Ok" << endl ;
+  cout << "  Ok" << endl ;
 }
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-static void allCorrectSettings (const uint32_t inStep, Set <uint32_t> & ioValidSettingSet) {
+static void allCorrectSettings (Set <uint32_t> & ioValidSettingSet) {
   cout << "All valid settings" << endl ;
-  for (uint32_t br = 1000 ; br < 20000000 ; br += inStep) {
+  for (uint32_t br = firstTestedBitRate ; br <= lastTestedBitRate ; br ++) {
     ACANSettings settings (br) ;
     if (settings.mBitSettingOk) {
       ioValidSettingSet.insert (br) ;
@@ -68,7 +71,7 @@ static void allCorrectSettings (const uint32_t inStep, Set <uint32_t> & ioValidS
 
 static void allExactSettings (Set <uint32_t> & ioExactSettingSet) {
   cout << "All exact settings" << endl ;
-  for (uint32_t br = 1000 ; br < 20000000 ; br ++) {
+  for (uint32_t br = firstTestedBitRate ; br <= lastTestedBitRate ; br ++) {
     ACANSettings settings (br, 0) ;
     if (settings.mBitSettingOk) {
       ioExactSettingSet.insert (br) ;
@@ -100,23 +103,22 @@ static void exhaustiveSearchOfAllExactSettings (Set <uint32_t> & ioExactSettingS
 int main (int /* argc */, const char * /* argv */ []) {
 //  compute (250 * 1000) ;
 //  compute (125 * 1000) ;
-  compute (500 * 1000) ;
+//  compute (500 * 1000) ;
 //  compute (1000 * 1000) ;
 //  compute (10 * 1000) ;
 //  compute (842 * 1000) ;
-  compute (440 * 1000) ;
-  compute (821 * 1000) ;
-  compute (842 * 1000) ;
-  compute (727 * 1000) ;
+//  compute (440 * 1000) ;
+//  compute (821 * 1000) ;
+//  compute (842 * 1000) ;
+//  compute (727 * 1000) ;
 //  compute (2000) ;
 //  compute (20 * 1000 * 1000) ;
-  compute (2509) ;
+//  compute (2509) ;
 //--- Explore all settings
   exploreAllSettings () ;
 //--- Check valid settings
-  const uint32_t step = 1 ;
   Set <uint32_t> validSettingSet ;
-  allCorrectSettings (step, validSettingSet) ;
+  allCorrectSettings (validSettingSet) ;
 //--- Check all exact settings
   Set <uint32_t> exactSettingSet ;
   allExactSettings (exactSettingSet) ;

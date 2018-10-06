@@ -25,7 +25,6 @@
 
 /* Begin PBXFileReference section */
 		CF2EC029202C77DA003B7A7D /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
-		CF2EC02A202C77DA003B7A7D /* set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = set.h; sourceTree = SOURCE_ROOT; };
 		CF2EC02C202C77F5003B7A7D /* ACANSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ACANSettings.cpp; path = "../teensyduino-library/ACAN/src/ACANSettings.cpp"; sourceTree = SOURCE_ROOT; };
 		CF2EC02D202C77F5003B7A7D /* ACANSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ACANSettings.h; path = "../teensyduino-library/ACAN/src/ACANSettings.h"; sourceTree = SOURCE_ROOT; };
 		CFF00390202C7778002E41EA /* test-ACANSettings-on-desktop */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "test-ACANSettings-on-desktop"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -49,7 +48,6 @@
 				CF2EC02D202C77F5003B7A7D /* ACANSettings.h */,
 				CF2EC029202C77DA003B7A7D /* main.cpp */,
 				CFF00391202C7778002E41EA /* Products */,
-				CF2EC02A202C77DA003B7A7D /* set.h */,
 			);
 			sourceTree = "<group>";
 		};

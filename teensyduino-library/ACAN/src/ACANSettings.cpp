@@ -10,7 +10,7 @@
 //
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-#include <ACANSettings.h>
+#include "ACANSettings.h"
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 //    CAN Settings
@@ -126,6 +126,8 @@ uint32_t ACANSettings::CANBitSettingConsistency (void) const {
   }
   if (mPhaseSegment1 == 0) {
     errorCode |= kPhaseSegment1IsZero ;
+  }else if ((mPhaseSegment1 == 1) && mTripleSampling) {
+    errorCode |= kPhaseSegment1Is1AndTripleSampling ;
   }else if (mPhaseSegment1 > 8) {
     errorCode |= kPhaseSegment1IsGreaterThan8 ;
   }
