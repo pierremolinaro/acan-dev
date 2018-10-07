@@ -14,51 +14,52 @@
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-#include <ACANCallBackRoutine.h>
 #include <ACANSettings.h>
+#include <CANMessage.h>
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
 typedef enum {kData, kRemote} tFrameKind ;
 typedef enum {kStandard, kExtended} tFrameFormat ;
 typedef enum {kActive, kPassive, kBusOff} tControllerState ;
+typedef void (*ACANCallBackRoutine) (const CANMessage & inMessage) ;
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
 class ACANPrimaryFilter {
-  public : uint32_t mFilterMask ;
-  public : uint32_t mAcceptanceFilter ;
-  public : ACANCallBackRoutine mCallBackRoutine ;
+  public: uint32_t mFilterMask ;
+  public: uint32_t mAcceptanceFilter ;
+  public: ACANCallBackRoutine mCallBackRoutine ;
 
-  public : inline ACANPrimaryFilter (const ACANCallBackRoutine inCallBackRoutine) :  // Accept any frame
+  public: inline ACANPrimaryFilter (const ACANCallBackRoutine inCallBackRoutine) :  // Accept any frame
   mFilterMask (0),
   mAcceptanceFilter (0),
   mCallBackRoutine (inCallBackRoutine) {
   }
 
-  public : ACANPrimaryFilter (const tFrameKind inKind,
-                              const tFrameFormat inFormat, // Accept any identifier
-                              const ACANCallBackRoutine inCallBackRoutine = NULL) ;
+  public: ACANPrimaryFilter (const tFrameKind inKind,
+                             const tFrameFormat inFormat, // Accept any identifier
+                             const ACANCallBackRoutine inCallBackRoutine = NULL) ;
 
-  public : ACANPrimaryFilter (const tFrameKind inKind,
-                              const tFrameFormat inFormat,
-                              const uint32_t inIdentifier,
-                              const ACANCallBackRoutine inCallBackRoutine = NULL) ;
+  public: ACANPrimaryFilter (const tFrameKind inKind,
+                             const tFrameFormat inFormat,
+                             const uint32_t inIdentifier,
+                            const ACANCallBackRoutine inCallBackRoutine = NULL) ;
 
-  public : ACANPrimaryFilter (const tFrameKind inKind,
-                              const tFrameFormat inFormat,
-                              const uint32_t inMask,
-                              const uint32_t inAcceptance,
-                              const ACANCallBackRoutine inCallBackRoutine = NULL) ;
+  public: ACANPrimaryFilter (const tFrameKind inKind,
+                             const tFrameFormat inFormat,
+                             const uint32_t inMask,
+                             const uint32_t inAcceptance,
+                             const ACANCallBackRoutine inCallBackRoutine = NULL) ;
 } ;
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
 class ACANSecondaryFilter {
-  public : uint32_t mSingleAcceptanceFilter ;
-  public : ACANCallBackRoutine mCallBackRoutine ;
+  public: uint32_t mSingleAcceptanceFilter ;
+  public: ACANCallBackRoutine mCallBackRoutine ;
 
-  public : ACANSecondaryFilter (const tFrameKind inKind,
+  public: ACANSecondaryFilter (const tFrameKind inKind,
                                 const tFrameFormat inFormat,
                                 const uint32_t inIdentifier,
                                 const ACANCallBackRoutine inCallBackRoutine = NULL) ;
