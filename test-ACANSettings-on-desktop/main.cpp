@@ -54,46 +54,62 @@ static void exploreAllSettings (void) {
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-static void allCorrectSettings (Set <uint32_t> & ioValidSettingSet) {
-  cout << "All valid settings" << endl ;
+static std::vector <uint32_t> allPossibleBitRates (void) {
+  cout << "All bit rates" << endl ;
+  Set allBitRates (lastTestedBitRate) ;
   for (uint32_t br = firstTestedBitRate ; br <= lastTestedBitRate ; br ++) {
     ACANSettings settings (br) ;
     if (settings.mBitSettingOk) {
-      ioValidSettingSet.insert (br) ;
+      allBitRates.insert (br) ;
     }
   }
-  cout << "  Completed, " << ioValidSettingSet.count () << " valid settings" << endl ;
+  const std::vector <uint32_t> result = allBitRates.values () ;
+  cout << "  Completed, " << result.size () << " valid settings" << endl ;
+  return result ;
 }
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 //  EXACT SETTINGS
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-static void allExactSettings (Set <uint32_t> & ioExactSettingSet) {
-  cout << "All exact settings" << endl ;
+static std::vector <uint32_t> allExactSettings (void) {
+  cout << "All exact bit rates" << endl ;
+  Set allExactBitRates (lastTestedBitRate) ;
   for (uint32_t br = firstTestedBitRate ; br <= lastTestedBitRate ; br ++) {
     ACANSettings settings (br, 0) ;
     if (settings.mBitSettingOk) {
-      ioExactSettingSet.insert (br) ;
+      allExactBitRates.insert (br) ;
     }
   }
-  cout << "  Completed, " << ioExactSettingSet.count () << " exact settings" << endl ;
+  const std::vector <uint32_t> result = allExactBitRates.values () ;
+//  for (uint32_t i=0 ; i<ioExactSettingSet.count() ; i++) {
+//    cout << "  " << ioExactSettingSet.valueAtIndex (i) << " bit/s" << endl ;
+//  }
+  cout << "  Completed, " << result.size () << " exact settings" << endl ;
+  return result ;
 }
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-static void exhaustiveSearchOfAllExactSettings (Set <uint32_t> & ioExactSettingSet) {
+static std::vector <uint32_t> exhaustiveSearchOfAllExactSettings (void) {
+  cout << "Exact settings ehaustive search" << endl ;
+  Set allExactBitRates (lastTestedBitRate) ;
   const uint32_t kCANClockFrequency = 16 *  1000 * 1000 ; // 16 MHz
   for (uint32_t brp = 1 ; brp <= 256 ; brp ++) {
     for (uint32_t TQCount = 5 ; TQCount <= 25 ; TQCount ++) {
       const uint32_t bitRate = kCANClockFrequency / brp / TQCount ;
       const bool exact = (bitRate * brp * TQCount) == kCANClockFrequency ;
       if (exact) {
-        ioExactSettingSet.insert (bitRate) ;
+        allExactBitRates.insert (bitRate) ;
       }
     }
   }
-  cout << "  Exhaustive search completed, " << ioExactSettingSet.count () << " exact settings" << endl ;
+  const std::vector <uint32_t> result = allExactBitRates.values () ;
+//  for (uint32_t i=0 ; i<ioExactSettingSet.count() ; i++) {
+//    cout << "  " << ioExactSettingSet.valueAtIndex (i) << " bit/s" << endl ;
+//  }
+  cout << "  Exhaustive search completed, " << result.size () << " exact settings" << endl ;
+  return result ;
 }
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
@@ -117,19 +133,16 @@ int main (int /* argc */, const char * /* argv */ []) {
 //--- Explore all settings
   exploreAllSettings () ;
 //--- Check valid settings
-  Set <uint32_t> validSettingSet ;
-  allCorrectSettings (validSettingSet) ;
+  allPossibleBitRates () ;
 //--- Check all exact settings
-  Set <uint32_t> exactSettingSet ;
-  allExactSettings (exactSettingSet) ;
-  Set <uint32_t> exhaustiveExactSettingSet ;
-  exhaustiveSearchOfAllExactSettings (exhaustiveExactSettingSet) ;
-  if (exactSettingSet != exhaustiveExactSettingSet) {
+  const std::vector <uint32_t> exactBitRates = allExactSettings () ;
+  const std::vector <uint32_t> exhaustiveExactBitRates = exhaustiveSearchOfAllExactSettings () ;
+  if (exactBitRates != exhaustiveExactBitRates) {
     cout << "  EQUALITY ERROR" << endl ;
     exit (1) ;
   }else{
-    for (size_t i=0 ; i<exactSettingSet.count () ; i++) {
-      cout << "  " << exactSettingSet.valueAtIndex (i) << " bit/s" << endl ;
+    for (size_t i=0 ; i<exactBitRates.size () ; i++) {
+      cout << "  " << exactBitRates.at (i) << " bit/s" << endl ;
     }
   }
   return 0;
