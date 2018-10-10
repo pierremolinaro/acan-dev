@@ -63,7 +63,7 @@ compileArduinoSketch (scriptDir, "SendReceiveRemoteFrames")
 #--- Compile latex doc
 runCommand ([scriptDir + "/documentation-in-latex/-build.command"])
 #--- Copy files in the distribution directory
-distributionDirectory = scriptDir + "/../acan"
+distributionDirectory = scriptDir + "/../GITHUB/acan"
 copyFile (scriptDir + "/documentation-in-latex/acan.pdf", distributionDirectory + "/extras")
 copyFile (scriptDir + "/library-sources/library.properties", distributionDirectory)
 copyFile (scriptDir + "/library-sources/keywords.txt", distributionDirectory)
