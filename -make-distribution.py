@@ -60,6 +60,7 @@ compileArduinoSketch (scriptDir, "ReceivePrimaryFilters")
 compileArduinoSketch (scriptDir, "LoopBackDemo")
 compileArduinoSketch (scriptDir, "ReceivePrimarySecondaryFilters")
 compileArduinoSketch (scriptDir, "SendReceiveRemoteFrames")
+compileArduinoSketch (scriptDir, "Teensy36Test")
 #--- Compile latex doc
 runCommand ([scriptDir + "/documentation-in-latex/-build.command"])
 #--- Copy files in the distribution directory
