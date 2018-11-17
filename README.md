@@ -23,29 +23,6 @@ Theses two sketches need to establish a CAN network that connects CAN0 and CAN1.
 * AND inputs are CAN0TX and CAN1TX;
 * AND outputs are CAN0RX and CAN1RX.
 
-### Memory Footprint
-
-Compiled with a CPU Speed of 180 MHz and Optimization *Smallest Code with LTO*.
-<table>
-    <tr>
-        <td><b>Sketch</b></td>
-        <td><b>Code size</b></td>
-        <td><b>Ram size</b></td>
-        <td><b>Dynamic Ram size</b></td>
-    </tr>
-    <tr>
-        <td><i>SendReceiveRemoteFramesWithFlexCan</i></td>
-        <td>9000 bytes</td>
-        <td>5032 bytes</td>
-        <td>0</td>
-    </tr>
-    <tr>
-        <td><i>SendReceiveRemoteFrames</i></td>
-        <td>9268 bytes</td>
-        <td>2940 bytes</td>
-        <td>1536 bytes</td>
-    </tr>
-</table>
 
 ### ACAN library description
 ACAN is a driver for the FlexCAN module built into the Teensy 3.1 / 3.2, 3.5, 3.6 microcontroller. It supports alternates pins. The two FlexCAN modules are supported on the Teensy 3.6.

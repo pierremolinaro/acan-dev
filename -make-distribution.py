@@ -42,6 +42,7 @@ def compileArduinoSketch (scriptDir, sketch) :
     "-tools", "/Users/pierremolinaro/Library/Arduino15/packages",
     "-built-in-libraries", "/Applications/Arduino.app/Contents/Java/libraries",
     "-libraries", "/Users/pierremolinaro/Documents/Arduino/libraries",
+    "-libraries", scriptDir + "/library-sources",
     "-fqbn=teensy:avr:teensy36:usb=serial,speed=180,opt=oslto,keys=en-us",
     "-ide-version=10805",
     "-build-path", buildPath,
@@ -63,14 +64,16 @@ compileArduinoSketch (scriptDir, "SendReceiveRemoteFrames")
 compileArduinoSketch (scriptDir, "Teensy36Test")
 #--- Compile latex doc
 runCommand ([scriptDir + "/documentation-in-latex/-build.command"])
-#--- Copy files in the distribution directory
 distributionDirectory = scriptDir + "/../GITHUB/acan"
+if not os.path.exists (distributionDirectory + "/extras"):
+  os.makedirs (distributionDirectory + "/extras")
 copyFile (scriptDir + "/documentation-in-latex/acan.pdf", distributionDirectory + "/extras")
-copyFile (scriptDir + "/library-sources/library.properties", distributionDirectory)
-copyFile (scriptDir + "/library-sources/keywords.txt", distributionDirectory)
+#--- Copy files in the distribution directory
+copyFile (scriptDir + "/library-sources/ACAN/library.properties", distributionDirectory)
+copyFile (scriptDir + "/library-sources/ACAN/keywords.txt", distributionDirectory)
 if os.path.exists (distributionDirectory + "/src"):
   shutil.rmtree (distributionDirectory + "/src")
-shutil.copytree (scriptDir + "/library-sources/src", distributionDirectory + "/src")
+shutil.copytree (scriptDir + "/library-sources/ACAN/src", distributionDirectory + "/src")
 if os.path.exists (distributionDirectory + "/examples"):
   shutil.rmtree (distributionDirectory + "/examples")
 shutil.copytree (scriptDir + "/sample-code", distributionDirectory + "/examples")
