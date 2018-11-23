@@ -41,8 +41,8 @@ def compileArduinoSketch (scriptDir, sketch) :
     "-tools", "/Applications/Arduino.app/Contents/Java/hardware/tools/avr",
     "-tools", "/Users/pierremolinaro/Library/Arduino15/packages",
     "-built-in-libraries", "/Applications/Arduino.app/Contents/Java/libraries",
-    "-libraries", "/Users/pierremolinaro/Documents/Arduino/libraries",
-    "-libraries", scriptDir + "/library-sources",
+    "-libraries", "/Users/pierremolinaro/Documents/Arduino-dev/libraries",
+#    "-libraries", scriptDir + "/library-sources",
     "-fqbn=teensy:avr:teensy36:usb=serial,speed=180,opt=oslto,keys=en-us",
     "-ide-version=10805",
     "-build-path", buildPath,
@@ -69,11 +69,11 @@ if not os.path.exists (distributionDirectory + "/extras"):
   os.makedirs (distributionDirectory + "/extras")
 copyFile (scriptDir + "/documentation-in-latex/acan.pdf", distributionDirectory + "/extras")
 #--- Copy files in the distribution directory
-copyFile (scriptDir + "/library-sources/ACAN/library.properties", distributionDirectory)
-copyFile (scriptDir + "/library-sources/ACAN/keywords.txt", distributionDirectory)
+copyFile (scriptDir + "/library-sources/library.properties", distributionDirectory)
+copyFile (scriptDir + "/library-sources/keywords.txt", distributionDirectory)
 if os.path.exists (distributionDirectory + "/src"):
   shutil.rmtree (distributionDirectory + "/src")
-shutil.copytree (scriptDir + "/library-sources/ACAN/src", distributionDirectory + "/src")
+shutil.copytree (scriptDir + "/library-sources/src", distributionDirectory + "/src")
 if os.path.exists (distributionDirectory + "/examples"):
   shutil.rmtree (distributionDirectory + "/examples")
 shutil.copytree (scriptDir + "/sample-code", distributionDirectory + "/examples")
