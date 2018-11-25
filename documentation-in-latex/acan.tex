@@ -485,9 +485,9 @@ void setup () {
   }
 }
 
-static unsigned gSendDate = 0 ;
-static unsigned gSentCount = 0 ;
-static unsigned gReceivedCount = 0 ;
+static uint32_t gSendDate = 0 ;
+static uint32_t gSentCount = 0 ;
+static uint32_t gReceivedCount = 0 ;
 
 void loop () {
   CANMessage message ;
@@ -667,7 +667,7 @@ A better way is to use a global variable to note if  message has been successful
 
 { \small
   \begin{lstlisting}[language=c++]
-static unsigned gSendDate = 0 ;
+static uint32_t gSendDate = 0 ;
 
 void loop () {
   CANMessage message ;

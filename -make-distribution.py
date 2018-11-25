@@ -42,7 +42,6 @@ def compileArduinoSketch (scriptDir, sketch) :
     "-tools", "/Users/pierremolinaro/Library/Arduino15/packages",
     "-built-in-libraries", "/Applications/Arduino.app/Contents/Java/libraries",
     "-libraries", "/Users/pierremolinaro/Documents/Arduino-dev/libraries",
-#    "-libraries", scriptDir + "/library-sources",
     "-fqbn=teensy:avr:teensy36:usb=serial,speed=180,opt=oslto,keys=en-us",
     "-ide-version=10805",
     "-build-path", buildPath,
@@ -64,7 +63,7 @@ compileArduinoSketch (scriptDir, "SendReceiveRemoteFrames")
 compileArduinoSketch (scriptDir, "Teensy36Test")
 #--- Compile latex doc
 runCommand ([scriptDir + "/documentation-in-latex/-build.command"])
-distributionDirectory = scriptDir + "/../GITHUB/acan"
+distributionDirectory = scriptDir + "/../releases/acan"
 if not os.path.exists (distributionDirectory + "/extras"):
   os.makedirs (distributionDirectory + "/extras")
 copyFile (scriptDir + "/documentation-in-latex/acan.pdf", distributionDirectory + "/extras")
