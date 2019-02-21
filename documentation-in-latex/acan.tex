@@ -307,7 +307,7 @@
 %                                                                                                                       *
 %-----------------------------------------------------------------------------------------------------------------------*
 
-\title{\bf \Huge{ACAN library for Teensy 3.1 / 3.2, 3.5, 3.6\\Version 1.0.6}}
+\title{\bf \Huge{ACAN library for Teensy 3.1 / 3.2, 3.5, 3.6\\Version 2.0.0}}
 \author{Pierre Molinaro}
 \date {\today}
 
@@ -332,11 +332,13 @@
 \begin{center}
   \begin{tabular}{llp{10cm}}
     \textbf{Version} & \textbf{Date} & \textbf{Comment}\\
-    1.0.0 & October 9, 2017 & Initial release \\
+    2.0.0 & February 21, 2019 & Updated documentation on error codes.\\
+          &                   & Remamed error codes.\\
+    1.0.6 &  October 23, 2018 & Compatibility with ACAN2515 version 1.0.1\\
+    1.0.5 &  October 12, 2018 & Corrected interrupt masking, some messages to send were lost in previous releases \\
+    1.0.4 &  October 12, 2018 & Adding include guard in \texttt{CANmessage.h} header file, for compatibility with \texttt{ACAN2515} library\\
     1.0.1 & December 11, 2017 & Added \texttt{mTxPinIsOpenCollector} (see \refSubsubsectionPage{TxPinIsOpenCollector}) and \texttt{mRxPinHasInternalPullUp} settings (\refSubsubsectionPage{RxPinHasInternalPullUp}) \\
-    1.0.4 & October 12, 2018 & Adding include guard in \texttt{CANmessage.h} header file, for compatibility with \texttt{ACAN2515} library\\
-    1.0.5 & October 12, 2018 & Corrected interrupt masking, some messages to send were lost in previous releases \\
-    1.0.6 & October 23, 2018 & Compatibility with ACAN2515 version 1.0.1
+    1.0.0 & October 9, 2017 & Initial release \\
   \end{tabular}
 \end{center}
 
@@ -1543,7 +1545,7 @@ const uint32_t errorCode = ACAN::can0.begin (settings) ;
 
 \subsectionLabel{The error code}{errorCodeMethodBegin}
 
-The \texttt{begin} method returns an error code. The value \texttt{0} denotes no error. Otherwise, you consider every bit as an error flag, as described in \refTableau{beginErrorCode}. An error code could report several errors.
+The \texttt{begin} method returns an error code. The value \texttt{0} denotes no error. Otherwise, you consider every bit as an error flag, as described in \refTableau{beginErrorCode}. An error code could report several errors. Bits from 0 to 11 are actually defined by the \texttt{ACANSettings} class and are also returned by the \texttt{CANBitSettingConsistency} method (see \refSubsectionPage{CANBitSettingConsistency}). Bits from 12 are defined by the \texttt{ACAN} class.
 
 
 
@@ -1551,33 +1553,57 @@ The \texttt{begin} method returns an error code. The value \texttt{0} denotes no
   \small
   \onehalfspacing
   \centering
-  \begin{tabular}{lllllllllp{6cm}l}
-    \multicolumn{9}{c}{\textbf{Error Codes}} & \textbf{Comment} & \textbf{Link}\\
-    31 -- 8 & 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 & & \\
-    \texttt{0} ...  \texttt{0} &\texttt{0} &\texttt{0} &\texttt{0} &\texttt{0} &\texttt{0} &\texttt{0} &\texttt{0} &\texttt{0} & No error & \\
-    \texttt{0} ...  \texttt{0} &\texttt{0} &\texttt{0} &\texttt{0} &\texttt{0} &\texttt{0} &\texttt{0} &\texttt{0} &\texttt{1} & CAN Bit configuration too far from wished bit rate & \refSubsubsectionPage{CANBitTooFarError}\\
-    \texttt{0} ...  \texttt{0} &\texttt{0} &\texttt{0} &\texttt{0} &\texttt{0} &\texttt{0} &\texttt{0} &\texttt{1} &\texttt{0} & Inconsistent CAN Bit configuration & \refSubsubsectionPage{CANBitInconsistentConfigError}\\
-    \texttt{0} ...  \texttt{0} &\texttt{x}&\texttt{x} &\texttt{x} &\texttt{x} &\texttt{x} &\texttt{1} &\texttt{0} &\texttt{0} & Too much primary filters & \refSubsubsectionPage{tooMuchPrimaryFiltersError}\\
-    \texttt{0} ...  \texttt{0} &\texttt{x} &\texttt{x} &\texttt{x} &\texttt{x} &\texttt{1} &\texttt{x} &\texttt{0} &\texttt{0} & Primary filter conformance error &  \refSubsectionPage{primaryFilterConformanceError}\\
-    \texttt{0} ...  \texttt{0} &\texttt{x}&\texttt{x} &\texttt{x} &\texttt{1} &\texttt{x} &\texttt{x} &\texttt{0} &\texttt{0} & Too much secondary filters & \refSubsubsectionPage{tooMuchSecondaryFiltersError}\\
-    \texttt{0} ...  \texttt{0} &\texttt{x}&\texttt{x} &\texttt{1} &\texttt{x} &\texttt{x} &\texttt{x} &\texttt{0} &\texttt{0} & Secondary filter conformance error &  \refSubsubsectionPage{secondaryFilterConformanceError}\\
-    \texttt{0} ...  \texttt{0} &\texttt{x}&\texttt{1} &\texttt{x} &\texttt{x} &\texttt{x} &\texttt{x} &\texttt{0} &\texttt{0} & \texttt{ACAN::can1} has no Tx alternate pin & \refSubsubsectionPage{noAlternateTxPinError}\\
-    \texttt{0} ...  \texttt{0} &\texttt{1}&\texttt{x} &\texttt{x} &\texttt{x} &\texttt{x} &\texttt{x} &\texttt{0} &\texttt{0} & \texttt{ACAN::can1} has no Rx alternate pin & \refSubsubsectionPage{noAlternateRxPinError} \\
+  \begin{tabular}{lll}
+    \textbf{Bit number} & \textbf{Comment} & \textbf{Link}\\
+    \texttt{0} & \texttt{mBitRatePrescaler} == 0\\
+    \texttt{1} & \texttt{mBitRatePrescaler} > 256\\
+    \texttt{2} & \texttt{mPropagationSegment} == 0\\
+    \texttt{3} & \texttt{mPropagationSegment} > 8\\
+    \texttt{4} & \texttt{mPhaseSegment1} == 0\\
+    \texttt{5} & \texttt{mPhaseSegment1} > 8\\
+    \texttt{6} & \texttt{mPhaseSegment2} == 0\\
+    \texttt{7} & \texttt{mPhaseSegment2} > 8\\
+    \texttt{8} & \texttt{mRJW} == 0\\
+    \texttt{9} & \texttt{mRJW} > 4\\
+    \texttt{10} & \texttt{mRJW} > \texttt{mPhaseSegment2}\\
+    \texttt{11} & \texttt{mPhaseSegment2} == 1 and \emph{triple sampling}\\
+    \texttt{12} & Too much primary filters & \refSubsubsectionPage{tooMuchPrimaryFiltersError}\\
+    \texttt{13} & Primary filter conformance error &  \refSubsectionPage{primaryFilterConformanceError}\\
+    \texttt{14} & Too much secondary filters & \refSubsubsectionPage{tooMuchSecondaryFiltersError}\\
+    \texttt{15} & Secondary filter conformance error &  \refSubsubsectionPage{secondaryFilterConformanceError}\\
+    \texttt{16} & \texttt{ACAN::can1} has no Tx alternate pin & \refSubsubsectionPage{noAlternateTxPinError}\\
+    \texttt{17} & \texttt{ACAN::can1} has no Rx alternate pin & \refSubsubsectionPage{noAlternateRxPinError} \\
+    \texttt{18} & Inconsistent CAN Bit configuration & \refSubsubsectionPage{CANBitInconsistentConfigError}\\
   \end{tabular}
   \caption{The \texttt{ACAN::begin} method error codes}
   \labelTableau{beginErrorCode}
 \end{table}
 
-The \texttt{ACAN} class defines bit error masks as public static constant properties: 
+The \texttt{ACANSettings} class defines static constant properties that can be used as mask error:
 { \small\begin{lstlisting}[language=c++]
-public: static const uint32_t kCANBitConfigurationTooFarFromWishedBitRate = 1 << 0 ;
-public: static const uint32_t kCANBitInconsistentConfiguration            = 1 << 1 ;
-public: static const uint32_t kTooMuchPrimaryFilters                      = 1 << 2 ;
-public: static const uint32_t kNotConformPrimaryFilter                    = 1 << 3 ;
-public: static const uint32_t kTooMuchSecondaryFilters                    = 1 << 4 ;
-public: static const uint32_t kNotConformSecondaryFilter                  = 1 << 5 ;
-public: static const uint32_t kNoAlternateTxPinForCan1                    = 1 << 6 ;
-public: static const uint32_t kNoAlternateRxPinForCan1                    = 1 << 7 ;
+  public: static const uint32_t kBitRatePrescalerIsZero            = 1 <<  0 ;
+  public: static const uint32_t kBitRatePrescalerIsGreaterThan256  = 1 <<  1 ;
+  public: static const uint32_t kPropagationSegmentIsZero          = 1 <<  2 ;
+  public: static const uint32_t kPropagationSegmentIsGreaterThan8  = 1 <<  3 ;
+  public: static const uint32_t kPhaseSegment1IsZero               = 1 <<  4 ;
+  public: static const uint32_t kPhaseSegment1IsGreaterThan8       = 1 <<  5 ;
+  public: static const uint32_t kPhaseSegment2IsZero               = 1 <<  6 ;
+  public: static const uint32_t kPhaseSegment2IsGreaterThan8       = 1 <<  7 ;
+  public: static const uint32_t kRJWIsZero                         = 1 <<  8 ;
+  public: static const uint32_t kRJWIsGreaterThan4                 = 1 <<  9 ;
+  public: static const uint32_t kRJWIsGreaterThanPhaseSegment2     = 1 << 10 ;
+  public: static const uint32_t kPhaseSegment1Is1AndTripleSampling = 1 << 11 ;
+\end{lstlisting}}
+
+The \texttt{ACAN} class defines static constant properties that can be used as mask error:
+{ \small\begin{lstlisting}[language=c++]
+  public: static const uint32_t kTooMuchPrimaryFilters     = 1 << 12 ;
+  public: static const uint32_t kNotConformPrimaryFilter   = 1 << 13 ;
+  public: static const uint32_t kTooMuchSecondaryFilters   = 1 << 14 ;
+  public: static const uint32_t kNotConformSecondaryFilter = 1 << 15 ;
+  public: static const uint32_t kNoAlternateTxPinForCan1   = 1 << 16 ;
+  public: static const uint32_t kNoAlternateRxPinForCan1   = 1 << 17 ;
+  public: static const uint32_t kCANBitConfiguration       = 1 << 18 ;
 \end{lstlisting}}
 
 For example, you can write:
@@ -1904,21 +1930,20 @@ The \texttt{CANBitSettingConsistency} method returns $0$ if CAN bit decompositio
   \small
   \onehalfspacing
   \centering
-  \begin{tabular}{llllllllllllll}
-    \multicolumn{12}{c}{\textbf{Error Codes}} & \textbf{Error}\\
-    31 -- 11 & 10 & 9 & 8 & 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 & \\
-    \zero~...  \zero &\zero &\zero &\zero &\zero &\zero &\zero &\zero &\zero &\zero &\zero &\zero & No error \\
-    \zero~...  \zero &\X &\X &\X &\X &\X &\X &\X &\X &\X &\X &\texttt{1} & \texttt{mBitRatePrescaler} == 0\\
-    \zero~...  \zero &\X &\X &\X &\X &\X &\X &\X &\X &\X &\texttt{1}&\X & \texttt{mBitRatePrescaler} > 256\\
-    \zero~...  \zero &\X &\X &\X &\X &\X &\X &\X &\X &\texttt{1}&\X &\X & \texttt{mPropagationSegment} == 0\\
-    \zero~...  \zero &\X &\X &\X &\X &\X &\X &\X &\texttt{1}&\X &\X &\X & \texttt{mPropagationSegment} > 8\\
-    \zero~...  \zero &\X &\X &\X &\X &\X &\X &\texttt{1}&\X &\X &\X &\X & \texttt{mPhaseSegment1} == 0\\
-    \zero~...  \zero &\X &\X &\X &\X &\X &\texttt{1}&\X &\X &\X &\X &\X & \texttt{mPhaseSegment1} > 8\\
-    \zero~...  \zero &\X &\X &\X &\X &\texttt{1}&\X &\X &\X &\X &\X &\X & \texttt{mPhaseSegment2} == 0\\
-    \zero~...  \zero &\X &\X &\X &\texttt{1}&\X &\X &\X &\X &\X &\X &\X & \texttt{mPhaseSegment2} > 8\\
-    \zero~...  \zero &\X &\X &\texttt{1}&\X &\X &\X &\X &\X &\X &\X &\X & \texttt{mRJW} == 0\\
-    \zero~...  \zero &\X &\texttt{1}&\X &\X &\X &\X &\X &\X &\X &\X &\X & \texttt{mRJW} > 4\\
-    \zero~...  \zero &\texttt{1}&\X &\X &\X &\X &\X &\X &\X &\X &\X &\X & \texttt{mRJW} > \texttt{mPhaseSegment2}\\
+  \begin{tabular}{ll}
+    \textbf{Bit number} & \textbf{Error}\\
+    \texttt{0} & \texttt{mBitRatePrescaler} == 0\\
+    \texttt{1} & \texttt{mBitRatePrescaler} > 256\\
+    \texttt{2} & \texttt{mPropagationSegment} == 0\\
+    \texttt{3} & \texttt{mPropagationSegment} > 8\\
+    \texttt{4} & \texttt{mPhaseSegment1} == 0\\
+    \texttt{5} & \texttt{mPhaseSegment1} > 8\\
+    \texttt{6} & \texttt{mPhaseSegment2} == 0\\
+    \texttt{7} & \texttt{mPhaseSegment2} > 8\\
+    \texttt{8} & \texttt{mRJW} == 0\\
+    \texttt{9} & \texttt{mRJW} > 4\\
+    \texttt{10} & \texttt{mRJW} > \texttt{mPhaseSegment2}\\
+    \texttt{11} & \texttt{mPhaseSegment2} == 1 and \emph{triple sampling}\\
   \end{tabular}
   \caption{The \texttt{ACANSettings::CANBitSettingConsistency} method error codes}
   \labelTableau{CANBitSettingConsistencyErrorCode}
@@ -1926,17 +1951,18 @@ The \texttt{CANBitSettingConsistency} method returns $0$ if CAN bit decompositio
 
 The \texttt{ACANSettings} class defines static constant properties that can be used as mask error:
 { \small\begin{lstlisting}[language=c++]
-public: static const uint32_t kBitRatePrescalerIsZero           = 1 <<  0 ;
-public: static const uint32_t kBitRatePrescalerIsGreaterThan256 = 1 <<  1 ;
-public: static const uint32_t kPropagationSegmentIsZero         = 1 <<  2 ;
-public: static const uint32_t kPropagationSegmentIsGreaterThan8 = 1 <<  3 ;
-public: static const uint32_t kPhaseSegment1IsZero              = 1 <<  4 ;
-public: static const uint32_t kPhaseSegment1IsGreaterThan8      = 1 <<  5 ;
-public: static const uint32_t kPhaseSegment2IsZero              = 1 <<  6 ;
-public: static const uint32_t kPhaseSegment2IsGreaterThan8      = 1 <<  7 ;
-public: static const uint32_t kRJWIsZero                        = 1 <<  8 ;
-public: static const uint32_t kRJWIsGreaterThan4                = 1 <<  9 ;
-public: static const uint32_t kRJWIsGreaterThanPhaseSegment2    = 1 << 10 ;
+  public: static const uint32_t kBitRatePrescalerIsZero            = 1 <<  0 ;
+  public: static const uint32_t kBitRatePrescalerIsGreaterThan256  = 1 <<  1 ;
+  public: static const uint32_t kPropagationSegmentIsZero          = 1 <<  2 ;
+  public: static const uint32_t kPropagationSegmentIsGreaterThan8  = 1 <<  3 ;
+  public: static const uint32_t kPhaseSegment1IsZero               = 1 <<  4 ;
+  public: static const uint32_t kPhaseSegment1IsGreaterThan8       = 1 <<  5 ;
+  public: static const uint32_t kPhaseSegment2IsZero               = 1 <<  6 ;
+  public: static const uint32_t kPhaseSegment2IsGreaterThan8       = 1 <<  7 ;
+  public: static const uint32_t kRJWIsZero                         = 1 <<  8 ;
+  public: static const uint32_t kRJWIsGreaterThan4                 = 1 <<  9 ;
+  public: static const uint32_t kRJWIsGreaterThanPhaseSegment2     = 1 << 10 ;
+  public: static const uint32_t kPhaseSegment1Is1AndTripleSampling = 1 << 11 ;
 \end{lstlisting}}
 
 
