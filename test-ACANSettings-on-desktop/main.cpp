@@ -1,43 +1,43 @@
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//----------------------------------------------------------------------------------------------------------------------
 //
 //  main.cpp
 //
 //  Created by Pierre Molinaro on 30/09/2017.
 //  Copyright © 2017 Pierre Molinaro. All rights reserved.
 //
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//----------------------------------------------------------------------------------------------------------------------
 
 #include "ACANSettings.h"
 #include "Set.h"
 
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//----------------------------------------------------------------------------------------------------------------------
 
 #include <iostream>
 using namespace std ;
 
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//----------------------------------------------------------------------------------------------------------------------
 
 static const uint32_t firstTestedBitRate = 1 ; // 1 bit/s
 static const uint32_t lastTestedBitRate = 20 * 1000 * 1000 ; // 20 Mbit/s
 
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//----------------------------------------------------------------------------------------------------------------------
 
-//static void compute (const uint32_t inWhishedBaudRate) {
-//  ACANSettings settings (inWhishedBaudRate) ;
-//  cout << "Desired baud rate: " << settings.mWhishedBitRate << " bit/s"  << endl ;
-//  cout << "  Divisor : " << (unsigned) settings.mBitRatePrescaler << endl ;
-//  cout << "  Prop seg: " << (unsigned) settings.mPropagationSegment << endl ;
-//  cout << "  Segment1: " << (unsigned) settings.mPhaseSegment1 << endl ;
-//  cout << "  Segment2: " << (unsigned) settings.mPhaseSegment2 << endl ;
-//  cout << "  RJW     : " << (unsigned) settings.mRJW << endl ;
-//  cout << "  Sampling: " << (settings.mTripleSampling ? "triple" : "single") << endl ;
-//  cout << "  Actual baud rate: " << settings.actualBitRate () << " bit/s" << endl ;
-//  cout << "  ppm: " << settings.ppmFromWishedBitRate () << endl ;
-//  cout << "  Sample Point: " << settings.samplePointFromBitStart () << "%" << endl ;
-//  cout << "  Bit setting closed to wished bit rate ok: " << ((settings.ppmFromWishedBitRate () < 1000) ? "yes" : "no") << endl ;
-//}
+static void compute (const uint32_t inWhishedBaudRate) {
+  ACANSettings settings (inWhishedBaudRate) ;
+  cout << "Desired baud rate: " << settings.mWhishedBitRate << " bit/s"  << endl ;
+  cout << "  Divisor : " << (unsigned) settings.mBitRatePrescaler << endl ;
+  cout << "  Prop seg: " << (unsigned) settings.mPropagationSegment << endl ;
+  cout << "  Segment1: " << (unsigned) settings.mPhaseSegment1 << endl ;
+  cout << "  Segment2: " << (unsigned) settings.mPhaseSegment2 << endl ;
+  cout << "  RJW     : " << (unsigned) settings.mRJW << endl ;
+  cout << "  Sampling: " << (settings.mTripleSampling ? "triple" : "single") << endl ;
+  cout << "  Actual baud rate: " << settings.actualBitRate () << " bit/s" << endl ;
+  cout << "  ppm: " << settings.ppmFromWishedBitRate () << endl ;
+  cout << "  Sample Point: " << settings.samplePointFromBitStart () << "%" << endl ;
+  cout << "  Bit setting closed to wished bit rate ok: " << ((settings.ppmFromWishedBitRate () < 1000) ? "yes" : "no") << endl ;
+}
 
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//----------------------------------------------------------------------------------------------------------------------
 
 static void exploreAllSettings (void) {
   cout << "Explore all settings" << endl ;
@@ -52,7 +52,7 @@ static void exploreAllSettings (void) {
   cout << "  Ok" << endl ;
 }
 
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//----------------------------------------------------------------------------------------------------------------------
 
 static std::vector <uint32_t> allPossibleBitRates (void) {
   cout << "All bit rates" << endl ;
@@ -68,9 +68,9 @@ static std::vector <uint32_t> allPossibleBitRates (void) {
   return result ;
 }
 
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//----------------------------------------------------------------------------------------------------------------------
 //  EXACT SETTINGS
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//----------------------------------------------------------------------------------------------------------------------
 
 static std::vector <uint32_t> allExactSettings (void) {
   cout << "All exact bit rates" << endl ;
@@ -89,7 +89,7 @@ static std::vector <uint32_t> allExactSettings (void) {
   return result ;
 }
 
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//----------------------------------------------------------------------------------------------------------------------
 
 static std::vector <uint32_t> exhaustiveSearchOfAllExactSettings (void) {
   cout << "Exact settings ehaustive search" << endl ;
@@ -112,13 +112,13 @@ static std::vector <uint32_t> exhaustiveSearchOfAllExactSettings (void) {
   return result ;
 }
 
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//----------------------------------------------------------------------------------------------------------------------
 //   MAIN
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//----------------------------------------------------------------------------------------------------------------------
 
 int main (int /* argc */, const char * /* argv */ []) {
 //  compute (250 * 1000) ;
-//  compute (125 * 1000) ;
+  compute (125 * 1000) ;
 //  compute (500 * 1000) ;
 //  compute (1000 * 1000) ;
 //  compute (10 * 1000) ;
@@ -126,7 +126,7 @@ int main (int /* argc */, const char * /* argv */ []) {
 //  compute (440 * 1000) ;
 //  compute (821 * 1000) ;
 //  compute (842 * 1000) ;
-//  compute (727 * 1000) ;
+  compute (727 * 1000) ;
 //  compute (2000) ;
 //  compute (20 * 1000 * 1000) ;
 //  compute (2509) ;
@@ -148,5 +148,5 @@ int main (int /* argc */, const char * /* argv */ []) {
   return 0;
 }
 
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//----------------------------------------------------------------------------------------------------------------------
 

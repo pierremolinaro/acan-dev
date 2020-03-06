@@ -307,7 +307,7 @@
 %                                                                                                                       *
 %-----------------------------------------------------------------------------------------------------------------------*
 
-\title{\bf \Huge{ACAN library for Teensy 3.1 / 3.2, 3.5, 3.6\\Version 2.0.0}}
+\title{\bf \Huge{ACAN library for Teensy 3.1 / 3.2, 3.5, 3.6\\Version 2.0.1}}
 \author{Pierre Molinaro}
 \date {\today}
 
@@ -332,6 +332,7 @@
 \begin{center}
   \begin{tabular}{llp{10cm}}
     \textbf{Version} & \textbf{Date} & \textbf{Comment}\\
+    2.0.1 & March 6, 2020 & Fixed broken sequentiality (thanks to \texttt{wangnick}).\\
     2.0.0 & February 21, 2019 & Updated documentation on error codes.\\
           &                   & Renamed error codes.\\
     1.0.6 &  October 23, 2018 & Compatibility with ACAN2515 version 1.0.1\\
@@ -540,7 +541,7 @@ void loop () {
 
 {\bf Line 34.} As the FlexCAN controller is configured in \emph{loop back} mode (see lines 7 and 8), all sent messages are received. The \texttt{receive} method returns \texttt{false} if no message is available from the \emph{driver reception buffer}. It returns \texttt{true} if a message has been successfully removed from the \emph{driver reception buffer}. This message is assigned to the \texttt{message} object.
 
-{\bf Lines 35 to 37.} It a message has been received, the \texttt{gReceivedCount} is incremented ans displayed.
+{\bf Lines 35 to 37.} It a message has been received, the \texttt{gReceivedCount} is incremented and displayed.
 
 
 
