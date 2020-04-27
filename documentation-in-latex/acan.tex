@@ -25,6 +25,9 @@
 % http://www.tuteurs.ens.fr/logiciels/latex/xetex.html
 \RequirePackage{etex}
 \usepackage{fontspec}
+\setmainfont{Titillium}[Ligatures=TeX]
+\setsansfont{Courier}[Ligatures=NoCommon,Scale=0.9]
+\setmonofont{Courier}[Ligatures=NoCommon,Scale=0.9]
 %\setmainfont{Georgia}[Ligatures=TeX]
 %\setsansfont{Courier}[Ligatures=NoCommon,Scale=0.95]
 %\setmonofont{Courier}[Ligatures=NoCommon,Scale=0.95]
@@ -120,7 +123,7 @@
   commentstyle=\color{red},
   stringstyle=\color{orange},
   frame=l,
-  backgroundcolor=\color{green!20},
+  backgroundcolor=\color{green!10},
   numberstyle=\ttfamily\small,
   xleftmargin=20pt
 }
@@ -307,7 +310,7 @@
 %                                                                                                                       *
 %-----------------------------------------------------------------------------------------------------------------------*
 
-\title{\bf \Huge{ACAN library for Teensy 3.1 / 3.2, 3.5, 3.6\\Version 2.0.1}}
+\title{\bf \Huge{ACAN library\\for Teensy 3.1 / 3.2, 3.5, 3.6\\Version 2.0.2}}
 \author{Pierre Molinaro}
 \date {\today}
 
@@ -332,9 +335,11 @@
 \begin{center}
   \begin{tabular}{llp{10cm}}
     \textbf{Version} & \textbf{Date} & \textbf{Comment}\\
+    2.0.2 & April 27, 2020 & Added \texttt{dataFloat} to \texttt{CANMessage} (thanks to \texttt{koryphon})\\
+          &                & Added several forgotten \texttt{volatile}\\
     2.0.1 & March 6, 2020 & Fixed broken sequentiality (thanks to \texttt{wangnick}).\\
-    2.0.0 & February 21, 2019 & Updated documentation on error codes.\\
-          &                   & Renamed error codes.\\
+    2.0.0 & February 21, 2019 & Updated documentation on error codes\\
+          &                   & Renamed error codes\\
     1.0.6 &  October 23, 2018 & Compatibility with ACAN2515 version 1.0.1\\
     1.0.5 &  October 12, 2018 & Corrected interrupt masking, some messages to send were lost in previous releases \\
     1.0.4 &  October 12, 2018 & Adding include guard in \texttt{CANmessage.h} header file, for compatibility with \texttt{ACAN2515} library\\
@@ -561,17 +566,16 @@ class CANMessage {
   public : uint8_t idx = 0 ;  // Used by the ACAN driver
   public : uint8_t len = 0 ;  // Length of data (0 ... 8)
   public : union {
-    #ifdef __UINT64_TYPE__
-      uint64_t data64   ; // Caution: subject to endianness
-    #endif
-    uint32_t data32 [2] ; // Caution: subject to endianness
-    uint16_t data16 [4] ; // Caution: subject to endianness
+    uint64_t data64        ; // Caution: subject to endianness
+    uint32_t data32 [2]    ; // Caution: subject to endianness
+    uint16_t data16 [4]    ; // Caution: subject to endianness
+    float    dataFloat [2] ; // Caution: subject to endianness
     uint8_t  data   [8] = {0, 0, 0, 0, 0, 0, 0, 0} ;
   } ;
 } ;
 \end{lstlisting}}
 
-Note the message datas are defined by an {\bf\texttt{union}}. So message datas can be seen as height bytes, four 16-bit unsigned integers, two 32-bit, or one 64-bit. Be aware that multi-byte integers are subject to endianness (Cortex M4 processors of Teensy 3.x are little-endian).
+Note the message datas are defined by an {\bf\texttt{union}}. So message datas can be seen as height bytes, four 16-bit unsigned integers, two 32-bit, one 64-bit or two 32-bit floats. Be aware that multi-byte integers and floats are subject to endianness (Cortex M4 processors of Teensy 3.x are little-endian).
 
 The \texttt{idx} property is not used in CAN frames, but:
 \begin{itemize}
@@ -727,7 +731,7 @@ As the size of \texttt{CANMessage} class is 16 bytes, the actual size of the dri
 
 \subsection{The \texttt{transmitBufferSize} method}
 
-The \texttt{transmitBufferSize} method returns the size of the driver transmit buffer, that is the value of \texttt{settings.mTransmitBufferSize}.
+It returns the size of the driver transmit buffer, that is the value of \texttt{settings.mTransmitBufferSize}.
 { \small\begin{lstlisting}[language=c++]
 const uint32_t s = ACAN::can0.transmitBufferSize () ;
 \end{lstlisting}}
@@ -911,7 +915,7 @@ The \texttt{receiveBufferPeakCount} method returns the peak value of message cou
 const uint32_t max = ACAN::can0.receiveBufferPeakCount () ;
 \end{lstlisting}}
 
-Note the driver receive buffer may overflow, if messages are not retrieved (by calls of \texttt{receive} or \texttt{dispatchReceivedMessage} methods). If an overflow occurs, further calls of \texttt{ACAN::can0.receiveBufferPeakCount ()} return \texttt{ACAN::can0.receiveBufferSize ()+1}.
+Note the driver receive buffer may overflow, if messages are not retrieved (by calls of the \texttt{receive} method or the \texttt{dispatchReceivedMessage} method). If an overflow occurs, further calls of the \texttt{ACAN::can0.receive- BufferPeakCount ()} method return \texttt{ACAN::can0.receiveBufferSize ()+1}.
 
 
 
@@ -1732,7 +1736,7 @@ In the Teensy 3.6, \texttt{ACAN::can1} does not support alternate Rx pin.
 
 \subsectionLabel{The \texttt{ACANSettings} constructor: computation of the CAN bit settings}{CANbitSettings}
 
-The constructor of the \texttt{ACANSettings} has one mandatory argument: the wished bit rate. It tries to compute the CAN bit settings for this bit rate. If it succeeds, the constructed object has its \texttt{mBitConfigurationClosedToWishedRate} property set to \texttt{true}, otherwise it is set to \texttt{false}. For example:
+The constructor of the \texttt{ACANSettings} has one mandatory argument: the wished bit rate. It tries to compute the CAN bit settings for this bit rate. If it succeeds, the constructed object has its \texttt{mBitConfigurationClosed- ToWishedRate} property set to \texttt{true}, otherwise it is set to \texttt{false}. For example:
 { \small\begin{lstlisting}[language=c++]
 void setup () {
   ACANSettings settings (1 * 1000 * 1000) ; // 1 Mbit/s
