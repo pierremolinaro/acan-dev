@@ -1,17 +1,10 @@
 ## CAN Library for Teensy 3.1 / 3.2, 3.5, 3.6
 
-### Why I have written the ACAN library
+### Compatibility with the ACANxxxx libraries
 
-I started writing the ACAN library when I discovered the FlexCan library embedded in Teensyduino 1.40 cannot send properly remote frames, and does not receive any remote frame.
+This library is fully compatible with the MCP2515 CAN Controller ACAN2515, ACAN2515Tiny, ACAN2517 and ACAN2517FD libraries, it uses a very similar API and the same `CANMessage` class for handling messages.
 
-Furthermore, in one of my projects, I discovered that the FlexCan driver receive buffer was overflowing, and the library provides no way to be warned. The solution was to increase its size for this project, but the FlexCan driver receive buffer size is defined by a macro in the library header: when I change it, the new value is applied for all my other sketches.
-
-By performing a FlexCan library source code review, I found:
-
-1. The *Resynchronization Jump Width* is always 1;
-2. *Triple sampling* is never selected;
-3. The *rtr* field of *CAN\_filter\_t* type is useless, it is never used by the driver;
-4. The *timeout* field of *CAN\_message\_t* type is useless, it is never used by the driver.
+### Demo sketchs
 
 Two sketches are provided for demonstrating remote frame sending and receiving capabilities:
 
