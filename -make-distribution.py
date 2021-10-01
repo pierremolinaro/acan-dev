@@ -63,7 +63,7 @@ compileArduinoSketch (scriptDir, "SendReceiveRemoteFrames")
 compileArduinoSketch (scriptDir, "Teensy36Test")
 #--- Compile latex doc
 runCommand ([scriptDir + "/documentation-in-latex/-build.command"])
-distributionDirectory = scriptDir + "/../releases/acan"
+distributionDirectory = scriptDir + "/../acan"
 if not os.path.exists (distributionDirectory + "/extras"):
   os.makedirs (distributionDirectory + "/extras")
 copyFile (scriptDir + "/documentation-in-latex/acan.pdf", distributionDirectory + "/extras")
