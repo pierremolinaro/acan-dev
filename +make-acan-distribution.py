@@ -32,6 +32,7 @@ def compileArduinoSketch (scriptDir, sketch) :
     "arduino-cli",
     "compile",
     "--libraries", "/Users/pierremolinaro/Documents/Arduino-dev/libraries",
+    "--library", "/Volumes/dev-git/acan-dev/library-sources",
     "-b=teensy:avr:teensy36",
 #     "-build-path", buildPath,
     "--warnings=all",
