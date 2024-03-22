@@ -1,11 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
-#------------------------------------------------------------------------------*
+#-----------------------------------------------------------------------------------------
 
 import os, sys, subprocess, shutil
 
-#------------------------------------------------------------------------------*
+#-----------------------------------------------------------------------------------------
 
 def runCommand (command) :
   s = "+"
@@ -17,12 +16,12 @@ def runCommand (command) :
   if childProcess.returncode != 0 :
     sys.exit (childProcess.returncode)
 
-#------------------------------------------------------------------------------*
+#-----------------------------------------------------------------------------------------
 
 def copyFile (sourceFile, destinationDir) :
   runCommand (["cp", sourceFile, destinationDir])
 
-#------------------------------------------------------------------------------*
+#-----------------------------------------------------------------------------------------
 
 def compileArduinoSketch (scriptDir, sketch) :
   buildPath = scriptDir + "/build-path/"  + sketch
@@ -30,27 +29,17 @@ def compileArduinoSketch (scriptDir, sketch) :
     os.makedirs (buildPath)
 #---
   command = [
-    "/Applications/Teensyduino.app/Contents/Java/arduino-builder",
-    "-quiet",
-    "-compile",
-    "-logger=machine",
-    "-hardware", "/Applications/Teensyduino.app/Contents/Java/hardware",
-    "-hardware", "/Users/pierremolinaro/Library/Arduino15/packages",
-#    "-hardware", "/Users/pierremolinaro/Documents/Arduino/hardware",
-    "-tools", "/Applications/Teensyduino.app/Contents/Java/tools-builder",
-    "-tools", "/Applications/Teensyduino.app/Contents/Java/hardware/tools/avr",
-    "-tools", "/Users/pierremolinaro/Library/Arduino15/packages",
-    "-built-in-libraries", "/Applications/Teensyduino.app/Contents/Java/libraries",
-    "-libraries", "/Users/pierremolinaro/Documents/Arduino-dev/libraries",
-    "-fqbn=teensy:avr:teensy36:usb=serial,speed=180,opt=oslto,keys=en-us",
-    "-ide-version=10805",
-    "-build-path", buildPath,
-    "-warnings=all",
-    scriptDir + "/sample-code/" + sketch + "/" + sketch + ".ino"
+    "arduino-cli",
+    "compile",
+    "--libraries", "/Users/pierremolinaro/Documents/Arduino-dev/libraries",
+    "-b=teensy:avr:teensy36",
+#     "-build-path", buildPath,
+    "--warnings=all",
+    scriptDir + "/sample-code/" + sketch
   ]
   runCommand (command)
 
-#------------------------------------------------------------------------------*
+#-----------------------------------------------------------------------------------------
 
 #--- Get script absolute path
 scriptDir = os.path.dirname (os.path.abspath (sys.argv [0]))
@@ -77,4 +66,4 @@ if os.path.exists (distributionDirectory + "/examples"):
   shutil.rmtree (distributionDirectory + "/examples")
 shutil.copytree (scriptDir + "/sample-code", distributionDirectory + "/examples")
 
-#------------------------------------------------------------------------------*
+#-----------------------------------------------------------------------------------------
